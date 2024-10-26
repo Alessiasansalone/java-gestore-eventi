@@ -1,6 +1,7 @@
 package org.milestone.milestoneIII;
 
 import java.time.LocalDate;
+import java.util.Scanner;
 
 public class Event {
 
@@ -8,6 +9,7 @@ public class Event {
 	public LocalDate date;
 	protected int totalSeatNumber;
 	protected int reservedSeatNumber = 0;
+	protected int availableSeats = totalSeatNumber;
 	
 	protected Event (String title, LocalDate date, int totalSeatNumber) {
 		this.title = title;
@@ -15,10 +17,10 @@ public class Event {
 		this.totalSeatNumber = totalSeatNumber;
 	}
 	
+	LocalDate currentDate = LocalDate.now();
+	
 	// Exceptions
 	protected LocalDate controlDate() {
-		
-		LocalDate currentDate = LocalDate.now();
 		
 		if (date.isBefore(currentDate)) {
 			throw new IllegalArgumentException("Questa data è già passata! "
@@ -37,27 +39,26 @@ public class Event {
 			
 		}
 	
-	// Getter e Setter
+	// Getter and Setter
 	public String getTitle() {
-		setTitle("Nuovo evento");
 		return title;
 	}
 
-	private void setTitle(String title) {
+	public void setTitle(String title) {
 		this.title = title;
 	}
 
+	
 	public LocalDate getDate() {
-		setDate(LocalDate.now());
 		return date;
 	}
 
-	private void setDate(LocalDate date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 
+	
 	protected int getTotalSeatNumber() {
-		setTotalSeatNumber(0);
 		return totalSeatNumber;
 	}
 
@@ -65,8 +66,8 @@ public class Event {
 		this.totalSeatNumber = totalSeatNumber;
 	}
 
+	
 	protected int getReservedSeatNumber() {
-		setReservedSeatNumber(0);
 		return reservedSeatNumber;
 	}
 
@@ -74,22 +75,65 @@ public class Event {
 		this.reservedSeatNumber = reservedSeatNumber;
 	}
 	
-	// Reservation
-	protected int reservationSeat() {
+	protected int getAvailableSeat() {
+		return availableSeats;
+	}
+
+	private void setavAilableSeats(int availableSeats) {
 		
-		reservedSeatNumber = reservedSeatNumber + 1;
+		this.availableSeats = availableSeats;
+	}
+	
+	// Reservation 
+	public int reservation () {
+		
+		Scanner scan = new Scanner(System.in);
+		
+		System.out.println("Quanti posti?");
+		int seats = scan.nextInt();
+		
+		setReservedSeatNumber(reservedSeatNumber + seats);		
+		setTotalSeatNumber(totalSeatNumber - seats);
+		
+		if (date.isBefore(currentDate))  {
+			
+			System.err.println("Ops! La data è già passata. Inseriscine "
+					+ "una valida.");
+			
+		} else if (reservedSeatNumber > totalSeatNumber) {
+			
+			System.err.println("Ci dispiace, ma non ci sono posti disponibili.");
+		}
+		
 		return reservedSeatNumber;
 	}
 	
-	protected int cancelReservation() {
+	
+	// Cancel reservation
+	public int cancelReservation() {
 		
-		reservedSeatNumber = reservedSeatNumber - 1;
+		setReservedSeatNumber(reservedSeatNumber -1);
+		
+		setTotalSeatNumber(totalSeatNumber + 1);
+		
+		if (date.isBefore(currentDate))  {
+			
+			System.err.println("Ops! La data è già passata. Inseriscine "
+					+ "una valida.");
+			
+		} else if (reservedSeatNumber > totalSeatNumber) {
+			
+			System.err.println("Ci dispiace, ma non ci sono posti disponibili.");
+		}
+		
 		return reservedSeatNumber;
 	}
 
+	
+	
 	@Override
 	public String toString() {
-		return "Event [title=" + title + ", date=" + date + "]";
+		return date + " - " + title;
 	}
 	
 	
