@@ -1,6 +1,7 @@
 package org.milestone.milestoneIII;
 
 import java.time.LocalDate;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Event {
@@ -75,34 +76,38 @@ public class Event {
 		this.reservedSeatNumber = reservedSeatNumber;
 	}
 	
-	protected int getAvailableSeat() {
-		return availableSeats;
-	}
-
-	private void setavAilableSeats(int availableSeats) {
-		
-		this.availableSeats = availableSeats;
-	}
 	
 	// Reservation 
 	public int reservation () {
 		
 		Scanner scan = new Scanner(System.in);
 		
-		System.out.println("Quanti posti?");
-		int seats = scan.nextInt();
+		int seats = 0;
 		
-		setReservedSeatNumber(reservedSeatNumber + seats);		
-		setTotalSeatNumber(totalSeatNumber - seats);
-		
-		if (date.isBefore(currentDate))  {
+
+		try {			
+			System.out.println("Quanti posti? \n"
+					+ "Posti disponibili: " + totalSeatNumber);
 			
-			System.err.println("Ops! La data è già passata. Inseriscine "
-					+ "una valida.");
+			seats = scan.nextInt();
 			
-		} else if (reservedSeatNumber > totalSeatNumber) {
+			if (seats < 0 || seats > totalSeatNumber)  {
+				throw new IllegalArgumentException("Numero non valido.");
+				
+			} else {
+				setReservedSeatNumber(reservedSeatNumber + seats);	
+				setTotalSeatNumber(totalSeatNumber - seats);
+			}
 			
-			System.err.println("Ci dispiace, ma non ci sono posti disponibili.");
+		} catch (InputMismatchException e) {
+			System.err.println("Input errato. Per favore, inserisci un numero.");
+			
+		} catch (IllegalArgumentException e) {
+			System.err.println(e.getMessage());
+			
+		} finally {
+			System.out.println("Posti disponibili: " + totalSeatNumber);
+			scan.close();
 		}
 		
 		return reservedSeatNumber;

@@ -1,7 +1,6 @@
 package org.milestone.milestoneIII;
 
 import java.time.LocalDate;
-import java.time.Month;
 import java.util.Scanner;
 
 
@@ -37,9 +36,7 @@ public class Main {
 		
 		System.out.println("Nuovo evento creato, codice: " + newEvent.toString());
 		
-		// Gestione prenotazioni		
-		int availableSeats = newEvent.totalSeatNumber;
-		
+		// Gestione prenotazioni
 		System.out.println("Vuoi prenotare uno o più biglietti? \n"
 				+ "1) Sì \n"
 				+ "2) No");
@@ -47,17 +44,15 @@ public class Main {
 		int choice = scan.nextInt();
 		
 		switch (choice) {
+		
 		case 1:
-			System.out.println("Quanti posti?");
-			int seats = scan.nextInt();
-			availableSeats = newEvent.totalSeatNumber - seats;
+				newEvent.reservation();
 			break;
+			
 		case 2:
 			System.out.println("Posti prenotati: " + newEvent.reservedSeatNumber + "\n"
-					+ "Posti disponibili " + availableSeats);
+					+ "Posti disponibili " + newEvent.totalSeatNumber);
 		}
-		System.out.println("Posti prenotati: " + newEvent.reservedSeatNumber + "\n"
-				+ "Posti disponibili " + availableSeats);
 	}
 
 }
